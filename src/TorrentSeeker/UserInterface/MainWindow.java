@@ -50,7 +50,7 @@ import TorrentSeeker.Service.Service;
 
 public class MainWindow extends JFrame {
 
-	public static final String ver = "0.5 alfa";
+	public static final String ver = "1.0 beta";
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField palabrasClave;
@@ -91,8 +91,6 @@ public class MainWindow extends JFrame {
 
 	public MainWindow() {
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				"\\\\source\\vjacynycz\\Downloads\\Bloody-Knife.ico"));
 		setTitle("Torrent Seeker");
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -119,7 +117,7 @@ public class MainWindow extends JFrame {
 		});
 
 		JMenuItem mntmAcercaDeDestripator = new JMenuItem(
-				"Acerca de Destripator");
+				"Acerca de Torrent Seeker");
 		mntmAcercaDeDestripator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showver();
@@ -335,6 +333,7 @@ public class MainWindow extends JFrame {
 		});
 
 		tableTorrents = new JTable();
+		tableTorrents.setToolTipText("Haz doble click en la tabla para abrir el navegador");
 		tableTorrents.setColumnSelectionAllowed(true);
 		tableTorrents.setCellSelectionEnabled(true);
 		tableTorrents
@@ -342,6 +341,7 @@ public class MainWindow extends JFrame {
 		tableTorrents.setModel(modelTorrentTable);
 
 		JScrollPane panelTorrents = new JScrollPane(tableTorrents);
+		panelTorrents.setToolTipText("Haz doble click en la tabla para abrir el navegador");
 		tableTorrents.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -349,11 +349,16 @@ public class MainWindow extends JFrame {
 				 	int row = tableTorrents.rowAtPoint(new Point(e.getX(), e.getY()));
 		            int col = tableTorrents.columnAtPoint(new Point(e.getX(), e.getY()));
 		            String url = (String) tableTorrents.getModel().getValueAt(row, col);
-		            try {
-						Desktop.getDesktop().browse(new URL(url).toURI());
-					} catch (Exception ex) {
-						MainWindow.report(ex.getMessage(), 1);
-					}
+		            if (col == 2 || col == 1){
+			            try {
+							Desktop.getDesktop().browse(new URL(url).toURI());
+						} catch (Exception ex) {
+							MainWindow.report(ex.getMessage(), 1);
+						}
+		            }
+				}
+				else{
+					MainWindow.errorLabel.setText("Haz doble click en un link para abrir el navegador");
 				}
 			}
 		});
